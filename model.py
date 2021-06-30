@@ -8,7 +8,7 @@ class Model(Connection):
         try:
             cur = self.conn().cursor()
             cur.execute("SELECT * FROM producto")
-            return cur.fetchmany()
+            return cur.fetchall()
         except sqlite3.Error as err:
             print(f"Hubo un problema {err}")
         finally:
