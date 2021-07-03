@@ -1,5 +1,5 @@
-from tkinter import Grid, StringVar, ttk
-from tkinter.constants import ANCHOR, CENTER, W, E, N, S
+from tkinter import StringVar, font, ttk
+from tkinter.constants import CENTER, W, E, N, S
 from model import Model
 import tkinter as tk
 
@@ -16,10 +16,13 @@ class Aplicacion(Model):
         self.window.iconphoto(True, icon)
         self.window.configure(padx=20, pady=20)
 
+        self.btn_style = ttk.Style().configure(
+            "TButton", padding=6, background="#5E503F", foreground="#fff", font=("Bahnschrift", 12, 'bold'))
+
         # Title initial
         label = tk.Label(self.window,
                          text="Bienvenido al sistema de gestión de productos",
-                         font=('Rockwell', 16, 'bold'),
+                         font=('Bahnschrift', 16, 'bold'),
                          padx=20,
                          image=icon,
                          compound='top',
@@ -27,7 +30,8 @@ class Aplicacion(Model):
         label.grid(row=0, column=0, columnspan=5, pady=(0, 20))
         label.configure(anchor=CENTER)
 
-        btn = ttk.Button(self.window, text="Empezar", command=self.getAll)
+        btn = ttk.Button(self.window, text="Empezar",
+                         command=self.getAll, style=self.btn_style)
         btn.grid(row=1, column=0, columnspan=5)
 
         self.window.mainloop()
@@ -40,16 +44,19 @@ class Aplicacion(Model):
         self.window_list.title("Gestión de productos")
         self.window_list.configure(padx=20, pady=20)
 
+        self.modal_list_title = tk.Label(self.window_list, text="Listado de productos", font=("Bahnscrift",14,'bold'))
+        self.modal_list_title.grid(row=0,column=0,columnspan=4)
+
         btn_add = ttk.Button(
-            self.window_list, text="Añadir", command=self.modalAdd)
-        btn_add.grid(row=0, column=0, columnspan=5)
+            self.window_list, text="Añadir", command=self.modalAdd, style=self.btn_style)
+        btn_add.grid(row=1, column=0, columnspan=4)
 
         # Table Thead
         thead_data = ['ID', 'NOMBRE', 'CANTIDAD', 'PRECIO']
         h = 0
-        self.table = ttk.Treeview(columns=("#0", "#1", "#2"), height=10)
+        self.table = ttk.Treeview(columns=("#1", "#2", "#3"), height=10)
         for j in thead_data:
-            self.table.grid(row=1, column=h)
+            self.table.grid(row=2, column=h)
             self.table.heading('#{}'.format(h), text=j, anchor=CENTER)
             h += 1
 
@@ -57,10 +64,10 @@ class Aplicacion(Model):
 
         self.btn_edit = ttk.Button(
             self.window_list, text="Editar", command=self.modalEdit)
-        self.btn_edit.grid(row=2, column=0, columnspan=3, sticky=S)
+        self.btn_edit.grid(row=3, column=0, columnspan=4, sticky=W+E)
         self.btn_delete = ttk.Button(
             self.window_list, text="Eliminar", command=self.deleteProduct)
-        self.btn_delete.grid(row=2, column=4, columnspan=3, sticky=N)
+        self.btn_delete.grid(row=4, column=0, columnspan=4, sticky=W+E)
 
         self.window_list.mainloop()
 
@@ -83,25 +90,27 @@ class Aplicacion(Model):
         self.window_add = tk.Toplevel()
         self.window_add.title("Añadir productos")
         self.window_add.configure(padx=20, pady=20)
-        self.window_add.geometry("400x300")
-        self.product_add_title = ttk.Label(
-            self.window_add, text="Añadir producto")
-        self.product_add_title.grid(row=0, column=1, columnspan=2)
-        self.product_name_label = ttk.Label(self.window_add, text="Nombre")
-        self.product_name_label.grid(row=1, column=1)
-        self.product_name = ttk.Entry(self.window_add)
-        self.product_name.grid(row=1, column=2)
-        self.product_cant_label = ttk.Label(self.window_add, text="Cantidad")
-        self.product_cant_label.grid(row=2, column=1)
-        self.product_cant = ttk.Entry(self.window_add)
-        self.product_cant.grid(row=2, column=2)
-        self.product_price_label = ttk.Label(self.window_add, text="Precio")
-        self.product_price_label.grid(row=3, column=1)
-        self.product_price = ttk.Entry(self.window_add)
-        self.product_price.grid(row=3, column=2)
+        self.modal_add_label = ttk.Label(
+            self.window_add, text="Añade un producto",font=("Bahnschrift", 14, 'bold'))
+        self.modal_add_label.grid(row=0, column=1, columnspan=5)
+        self.product_name_label = ttk.Label(
+            self.window_add, text="Nombre", width=20)
+        self.product_name_label.grid(row=1, column=1, columnspan=2)
+        self.product_name = ttk.Entry(self.window_add, width=40)
+        self.product_name.grid(row=1, column=3, columnspan=3)
+        self.product_cant_label = ttk.Label(
+            self.window_add, text="Cantidad", width=20)
+        self.product_cant_label.grid(row=2, column=1, columnspan=2)
+        self.product_cant = ttk.Entry(self.window_add, width=40)
+        self.product_cant.grid(row=2, column=3, columnspan=3)
+        self.product_price_label = ttk.Label(
+            self.window_add, text="Precio", width=20)
+        self.product_price_label.grid(row=3, column=1, columnspan=2)
+        self.product_price = ttk.Entry(self.window_add, width=40)
+        self.product_price.grid(row=3, column=3, columnspan=3)
         self.btn_add_product = ttk.Button(
             self.window_add, text="Registrar producto", command=self.addProduct)
-        self.btn_add_product.grid(row=4, column=1, columnspan=2)
+        self.btn_add_product.grid(row=4, column=1, columnspan=5)
         self.window_add.mainloop()
 
     def edit(self):
@@ -109,7 +118,7 @@ class Aplicacion(Model):
         name = self.product_name.get()
         cant = self.product_cant.get()
         price = self.product_price.get()
-        self.update(name,cant,price,cod)
+        self.update(name, cant, price, cod)
         self.window_edit.destroy()
         self.get()
 
@@ -121,28 +130,31 @@ class Aplicacion(Model):
         self.window_edit = tk.Toplevel()
         self.window_edit.title("Editar productos")
         self.window_edit.configure(padx=20, pady=20)
+        self.modal_edit_label = ttk.Label(
+            self.window_edit, text="Edición de producto",font=("Bahnschrift", 14, 'bold'))
+        self.modal_edit_label.grid(row=0, column=0, columnspan=2)
         self.product_id_label = tk.Label(self.window_edit, text="Id")
-        self.product_id_label.grid(row=0, column=1)
+        self.product_id_label.grid(row=1, column=0)
         self.product_id = tk.Entry(self.window_edit, textvariable=StringVar(
-            self.window_edit, value=cod), state='readonly')
-        self.product_id.grid(row=0,column=2)
+            self.window_edit, value=cod), state='readonly', width=30)
+        self.product_id.grid(row=1, column=1)
         self.product_name_label = tk.Label(self.window_edit, text="Nombre")
-        self.product_name_label.grid(row=1, column=1)
+        self.product_name_label.grid(row=2, column=0)
         self.product_name = tk.Entry(self.window_edit, textvariable=StringVar(
-            self.window_edit, value=name))
-        self.product_name.grid(row=1, column=2)
+            self.window_edit, value=name), width=30)
+        self.product_name.grid(row=2, column=1)
         self.product_cant_label = tk.Label(self.window_edit, text="Cantidad")
-        self.product_cant_label.grid(row=2, column=1)
+        self.product_cant_label.grid(row=3, column=0)
         self.product_cant = tk.Entry(self.window_edit, textvariable=StringVar(
-            self.window_edit, value=cant))
-        self.product_cant.grid(row=2, column=2)
+            self.window_edit, value=cant), width=30)
+        self.product_cant.grid(row=3, column=1)
         self.product_price_label = tk.Label(self.window_edit, text="Precio")
-        self.product_price_label.grid(row=3, column=1)
+        self.product_price_label.grid(row=4, column=0)
         self.product_price = tk.Entry(self.window_edit, textvariable=StringVar(
-            self.window_edit, value=price))
-        self.product_price.grid(row=3, column=2)
+            self.window_edit, value=price), width=30)
+        self.product_price.grid(row=4, column=1)
         self.btn = ttk.Button(
-            self.window_edit, text="Actualizar", command=self.edit).grid(row=5, column=0)
+            self.window_edit, text="Actualizar", command=self.edit).grid(row=5, column=0, columnspan=2)
         self.window_edit.mainloop()
 
     def deleteProduct(self):
