@@ -1,4 +1,4 @@
-# Crud Python y SQLite3 (GUI Tkinter)
+# Python CRUD with SQLite3 (GUI Tkinter)
 
-Proyecto de practica creando conexion de Python con SQLite, programación orientada a objetos y haciendo uso de la interfaz gráfica (GUI) Tkinter.
+Practice project creating Python connection with SQLite, object-oriented programming and using the graphical interface (GUI) Tkinter.
 
